@@ -2,7 +2,8 @@
 #include <stdlib.h>
 
 // Stack structure
-struct stack {
+struct stack
+{
     int size;
     int top;
     int *arr;
@@ -17,29 +18,39 @@ void display(struct stack *s);
 void checkEmpty(struct stack *s);
 
 // Function definitions
-int isEmpty(struct stack *s) {
+int isEmpty(struct stack *s)
+{
     return s->top == -1;
 }
 
-int isFull(struct stack *s) {
+int isFull(struct stack *s)
+{
     return s->top == s->size - 1;
 }
 
-void push(struct stack *s, int val) {
-    if (isFull(s)) {
+void push(struct stack *s, int val)
+{
+    if (isFull(s))
+    {
         printf("\nStack Overflow! Cannot push %d\n", val);
-    } else {
+    }
+    else
+    {
         s->top++;
         s->arr[s->top] = val;
         printf("\n%d pushed into the stack.\n", val);
     }
 }
 
-int pop(struct stack *s) {
-    if (isEmpty(s)) {
+int pop(struct stack *s)
+{
+    if (isEmpty(s))
+    {
         printf("\nStack Underflow! Nothing to pop.\n");
         return -1;
-    } else {
+    }
+    else
+    {
         int val = s->arr[s->top];
         s->top--;
         printf("\nPopped element: %d\n", val);
@@ -47,25 +58,32 @@ int pop(struct stack *s) {
     }
 }
 
-void display(struct stack *s) {
-    if (isEmpty(s)) {
+void display(struct stack *s)
+{
+    if (isEmpty(s))
+    {
         printf("\nStack is empty.\n");
-    } else {
+    }
+    else
+    {
         printf("\nStack elements (Top to Bottom):\n");
-        for (int i = s->top; i >= 0; i--) {
+        for (int i = s->top; i >= 0; i--)
+        {
             printf("%d\n", s->arr[i]);
         }
     }
 }
 
-void checkEmpty(struct stack *s) {
+void checkEmpty(struct stack *s)
+{
     if (isEmpty(s))
         printf("\nStack is empty.\n");
     else
         printf("\nStack is not empty.\n");
 }
 
-int main() {
+int main()
+{
     struct stack *sp = (struct stack *)malloc(sizeof(struct stack));
 
     printf("Enter the size of the stack: ");
@@ -77,30 +95,32 @@ int main() {
     printf("\n--- STACK OPERATIONS (Dynamic + Menu Driven) ---\n");
     printf("1. Push\n2. Pop\n3. Display\n4. Check Empty\n5. Exit\n");
 
-    do {
+    do
+    {
         printf("\nEnter your choice: ");
         scanf("%d", &choice);
 
-        switch (choice) {
-            case 1:
-                printf("Enter value to push: ");
-                scanf("%d", &val);
-                push(sp, val);
-                break;
-            case 2:
-                pop(sp);
-                break;
-            case 3:
-                display(sp);
-                break;
-            case 4:
-                checkEmpty(sp);
-                break;
-            case 5:
-                printf("\nExiting... Thank you!\n");
-                break;
-            default:
-                printf("\nInvalid choice! Please enter 1-5.\n");
+        switch (choice)
+        {
+        case 1:
+            printf("Enter value to push: ");
+            scanf("%d", &val);
+            push(sp, val);
+            break;
+        case 2:
+            pop(sp);
+            break;
+        case 3:
+            display(sp);
+            break;
+        case 4:
+            checkEmpty(sp);
+            break;
+        case 5:
+            printf("\nExiting... Thank you!\n");
+            break;
+        default:
+            printf("\nInvalid choice! Please enter 1-5.\n");
         }
     } while (choice != 5);
 
