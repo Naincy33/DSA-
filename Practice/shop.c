@@ -8,40 +8,53 @@ Develop C code to simulate this inventory management using suitable data structu
 
 #include <stdio.h>
 
-#define MAX 10  // Maximum boxes allowed in inventory
+#define MAX 10 // Maximum boxes allowed in inventory
 
-int main() {
-    int stack[MAX];  // Stores number of chocolates in each box
-    int top = -1;    // Stack is initially empty
-    int N;           // Number of minutes / operations
+int main()
+{
+    int stack[MAX]; // Stores number of chocolates in each box
+    int top = -1;   // Stack is initially empty
+    int N;          // Number of minutes / operations
 
     printf("Enter number of operations: ");
     scanf("%d", &N);
 
-    for (int i = 0; i < N; i++) {
+    for (int i = 0; i < N; i++)
+    {
         char op;
         printf("Enter operation (S for Sell, R for Receive): ");
         scanf(" %c", &op);
 
-        if (op == 'R' || op == 'r') {
+        if (op == 'R' || op == 'r')
+        {
             int chocolates;
             printf("Enter number of chocolates in new box: ");
             scanf("%d", &chocolates);
 
-            if (top >= MAX - 1) {
+            if (top >= MAX - 1)
+            {
                 printf("Inventory Full for the Day\n");
-            } else {
+            }
+            else
+            {
                 top++;
                 stack[top] = chocolates;
             }
-        } else if (op == 'S' || op == 's') {
-            if (top == -1) {
+        }
+        else if (op == 'S' || op == 's')
+        {
+            if (top == -1)
+            {
                 printf("No chocolates available\n");
-            } else {
+            }
+            else
+            {
                 printf("Sold %d chocolates\n", stack[top]);
                 top--;
             }
-        } else {
+        }
+        else
+        {
             printf("Invalid operation!\n");
         }
     }
