@@ -4,11 +4,11 @@
 struct node
 {
     int data;
-    struct nodde *left;
+    struct node *left;
     struct node *right;
 };
 
-struct node *CreateNode(int data)
+struct node *createNode(int data)
 {
     struct node *n;
     n = (struct node *)malloc(sizeof(struct node));
@@ -58,7 +58,7 @@ int main()
     p1->left = p3;
     p1->right = p4;
 
-    struct node *n = search(p, 10);
+    struct node *n = search(p, 3);
     if (n != NULL)
     {
         printf("Found: %d", n->data);

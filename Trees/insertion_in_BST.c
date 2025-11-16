@@ -1,5 +1,5 @@
 #include<stdio.h>
-#include<stdlib.h>
+#include<malloc.h>
 
 struct node{
     int data;
@@ -16,19 +16,29 @@ struct node* createNode(int data){
     return n; // Finally returning the created node
 }
 
-struct node * searchIter(struct node* root, int key){
-    while(root!=NULL){
-        if(key == root->data){
-            return root;
-        }
-        else if(key<root->data){
-            root = root->left;
-        }
-        else{
-            root = root->right;
-        }
-    }
-    return NULL;
+void insert(struct node *root, int key){
+   struct node *prev = NULL;
+   while(root!=NULL){
+       prev = root;
+       if(key==root->data){
+           printf("Cannot insert %d, already in BST", key);
+           return;
+       }
+       else if(key<root->data){
+           root = root->left;
+       }
+       else{
+           root = root->right;
+       }
+   }
+   struct node* new = createNode(key);
+   if(key<prev->data){
+       prev->left = new;
+   }
+   else{
+       prev->right = new;
+   }
+
 }
 
 int main(){
@@ -52,12 +62,7 @@ int main(){
     p1->left = p3;
     p1->right = p4;
 
-    struct node* n = searchIter(p, 6);
-    if(n!=NULL){
-    printf("Found: %d", n->data);
-    }
-    else{
-        printf("Element not found");
-    }
+    insert(p, 16);
+    printf("%d", p->right->right->data);
     return 0;
 }
