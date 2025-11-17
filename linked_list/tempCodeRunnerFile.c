@@ -1,13 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Node structure
 struct Node {
     int data;
     struct Node* next;
 };
 
-// Create node
+// Create new node
 struct Node* createNode(int value) {
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
     newNode->data = value;
@@ -31,83 +30,69 @@ void insertEnd(struct Node** head, int value) {
     temp->next = newNode;
 }
 
-// Display linked list
-void display(struct Node* head) {
+// Print linked list
+void printList(struct Node* head) {
     struct Node* temp = head;
     while (temp != NULL) {
-        printf("%d ", temp->data);
+        printf("%d -> ", temp->data);
         temp = temp->next;
     }
-    printf("\n");
+    printf("NULL\n");
 }
 
-// ----------- MERGE TWO SORTED LISTS -----------
-struct Node* merge(struct Node* a, struct Node* b) {
-    if (!a) return b;
-    if (!b) return a;
 
-    struct Node* result = NULL;
+// -------------------------------
+// CONCATENATE (Your Method)
+// -------------------------------
+void concatenate(struct Node* head1, struct Node* head2) {
 
-    if (a->data < b->data) {
-        result = a;
-        result->next = merge(a->next, b);
-    } else {
-        result = b;
-        result->next = merge(a, b->next);
+    if (head1 == NULL) { 
+        // If first list empty, second becomes whole result
+        head1 = head2;
+        return;
     }
-    return result;
+
+    struct Node* temp = head1;
+
+    // Go to last node of first list
+    while (temp->next != NULL)
+        temp = temp->next;
+
+    // Link last node of list1 to head2
+    temp->next = head2;
 }
 
-// ----------- FIND MIDDLE NODE ----------
-struct Node* findMid(struct Node* head) {
-    struct Node* slow = head;
-    struct Node* fast = head->next;
 
-    while (fast != NULL && fast->next != NULL) {
-        slow = slow->next;
-        fast = fast->next->next;
-    }
-    return slow;   // slow = middle node
-}
 
-// ----------- MERGE SORT FUNCTION ----------
-struct Node* mergeSort(struct Node* head) {
-    // Base case: 0 or 1 node → already sorted
-    if (!head || !head->next)
-        return head;
-
-    // Step 1: Find middle
-    struct Node* mid = findMid(head);
-
-    // Step 2: Split list into two halves
-    struct Node* right = mid->next;
-    mid->next = NULL;
-
-    // Step 3: Sort both halves
-    struct Node* leftSorted = mergeSort(head);
-    struct Node* rightSorted = mergeSort(right);
-
-    // Step 4: Merge both sorted halves
-    return merge(leftSorted, rightSorted);
-}
-
-// ----------- MAIN FUNCTION ----------
+// -------------------------------
+// MAIN FUNCTION
+// -------------------------------
 int main() {
-    struct Node* head = NULL;
 
-    insertEnd(&head, 5);
-    insertEnd(&head, 1);
-    insertEnd(&head, 8);
-    insertEnd(&head, 3);
-    insertEnd(&head, 2);
+    struct Node* head1 = NULL;
+    struct Node* head2 = NULL;
 
-    printf("Original List: ");
-    display(head);
+    // First list
+    insertEnd(&head1, 10);
+    insertEnd(&head1, 20);
+    insertEnd(&head1, 30);
 
-    head = mergeSort(head);
+    // Second list
+    insertEnd(&head2, 40);
+    insertEnd(&head2, 50);
+    insertEnd(&head2, 60);
 
-    printf("Sorted List: ");
-    display(head);
+    printf("First List:\n");
+    printList(head1);
+
+    printf("Second List:\n");
+    printList(head2);
+
+    // Concatenate
+    concatenate(head1, head2);
+
+    printf("\nAfter Concatenation:\n");
+    printList(head1);
 
     return 0;
 }
