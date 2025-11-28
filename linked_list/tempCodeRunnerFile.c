@@ -1,158 +1,53 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-typedef struct DListNode {
+struct Node {
     int data;
-    struct DListNode* prev;
-    struct DListNode* next;
-} DListNode;
+    struct Node* next;
+};
 
-DListNode* createNode(int data) {
-    DListNode* newNode = (DListNode*)malloc(sizeof(DListNode));
-    newNode->data = data;
-    newNode->prev = NULL;
-    newNode->next = NULL;
-    return newNode;
-}
-void insert_at_beg(DListNode** head, int data) {
-    DListNode* newNode = createNode(data);
-    if (*head == NULL) {
-        *head = newNode;
-        return;
-    }
-    newNode->next = *head;
-    (*head)->prev = newNode;
-    *head = newNode;
+struct Node* head = NULL;
+
+struct Node* createNode(int x){
+    struct Node* newnode = (struct Node*)malloc(sizeof(struct Node));
+    newnode->data = x;
+    newnode->next = NULL;
+    return newnode;
 }
 
-void insert_at_end(DListNode** head, int data) {
-    DListNode* newNode = createNode(data);
-    if (*head == NULL) {
-        *head = newNode;
-        return;
-    }
-    DListNode* temp = *head;
-    while (temp->next != NULL) {
-        temp = temp->next;
-    }
-    temp->next = newNode;
-    newNode->prev = temp;
-}
-
-void insert_at_pos(DListNode** head, int data, int pos) {
-    if (pos == 0) {
-        insert_at_beg(head, data);
-        return;
-    }
-    DListNode* newNode = createNode(data);
-    DListNode* temp = *head;
-    for (int i = 0; i < pos - 1 && temp != NULL; i++) {
-        temp = temp->next;
-    }
-    if (temp == NULL) {
-        printf("Position out of bounds\n");
-        free(newNode);
-        return;
-    }
-    newNode->next = temp->next;
-    newNode->prev = temp;
-    if (temp->next != NULL) {
-        temp->next->prev = newNode;
-    }
-    temp->next = newNode;
-}
-
-void display(DListNode* head) {
-    DListNode* temp = head;
-    while (temp != NULL) {
+void printList(){
+    struct Node* temp = head;
+    while(temp != NULL){
         printf("%d ", temp->data);
         temp = temp->next;
     }
     printf("\n");
 }
-void delete_at_beg(DListNode** head) {
-    if (*head == NULL) {
-        printf("List is empty\n");
-        return;
-    }
-    DListNode* temp = *head;
-    *head = (*head)->next;
-    if (*head != NULL) {
-        (*head)->prev = NULL;
-    }
-    free(temp);
-}
 
-void delete_at_end(DListNode** head) {
-    if (*head == NULL) {
-        printf("List is empty\n");
-        return;
-    }
-    DListNode* temp = *head;
-    if (temp->next == NULL) {
-        free(temp);
-        *head = NULL;
-        return;
-    }
-    while (temp->next != NULL) {
+void Count_nodes(){
+    struct Node* temp = head;
+    int count = 0;
+
+    while(temp != NULL){
+        count++;
         temp = temp->next;
     }
-    temp->prev->next = NULL;
-    free(temp);
+
+    printf("\nTotal number of nodes is %d\n", count);
 }
 
-void delete_at_pos(DListNode** head, int pos) {
-    if (*head == NULL) {
-        printf("List is empty\n");
-        return;
-    }
-    DListNode* temp = *head;
-    if (pos == 0) {
-        *head = temp->next;
-        if (*head != NULL) {
-            (*head)->prev = NULL;
-        }
-        free(temp);
-        return;
-    }
-    for (int i = 0; i < pos && temp != NULL; i++) {
-        temp = temp->next;
-    }
-    if (temp == NULL) {
-        printf("Position out of bounds\n");
-        return;
-    }
-    if (temp->next != NULL) {
-        temp->next->prev = temp->prev;
-    }
-    if (temp->prev != NULL) {
-        temp->prev->next = temp->next;
-    }
-    free(temp);
-}
+int main(){
 
-int main() {
-    DListNode* head = NULL;
+    // create list : 10→20→30→40
+    head = createNode(10);
+    head->next = createNode(20);
+    head->next->next = createNode(30);
+    head->next->next->next = createNode(40);
 
-    insert_at_end(&head, 10);
-    insert_at_end(&head, 20);
-    insert_at_beg(&head, 5);
-    insert_at_pos(&head, 15, 2);
+    printf("Linked List: ");
+    printList();
 
-    printf("Doubly Linked List: ");
-    display(head);
-
-    delete_at_pos(&head, 2);
-    printf("After deleting at position 2: ");
-    display(head);
-
-    delete_at_beg(&head);
-    printf("After deleting at beginning: ");
-    display(head);
-
-    delete_at_end(&head);
-    printf("After deleting at end: ");
-    display(head);
+    Count_nodes();
 
     return 0;
 }
