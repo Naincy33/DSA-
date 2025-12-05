@@ -1,83 +1,68 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-// Linked list node
-struct ListNode {
-    int val;
-    struct ListNode* next;
+struct node {
+    char name[30];
+    char email[50];
+    struct node *prev, *next;
 };
 
-// Create new node
-struct ListNode* newNode(int x) {
-    struct ListNode* temp = (struct ListNode*)malloc(sizeof(struct ListNode));
-    temp->val = x;
-    temp->next = NULL;
-    return temp;
+struct node *head = NULL;
+
+struct node* createNode(char name[], char email[]) {
+    struct node *newnode = (struct node*)malloc(sizeof(struct node));
+    strcpy(newnode->name, name);
+    strcpy(newnode->email, email);
+    newnode->prev = newnode->next = NULL;
+    return newnode;
 }
 
-// Rotate Right function
-struct ListNode* rotateRight(struct ListNode* head, int k) {
+void insertSorted(char name[], char email[]) {
+    struct node *newnode = createNode(name, email);
 
-    if (!head || !head->next || k == 0)
-        return head;
+    if(head == NULL || strcmp(name, head->name) < 0) {
+        newnode->next = head;
+        if(head != NULL)
+            head->prev = newnode;
+        head = newnode;
+        return;
+    }
 
-    // Step 1: Find length of list
-    struct ListNode* temp = head;
-    int length = 1;
-    while (temp->next) {
+    struct node *temp = head;
+    while(temp->next != NULL && strcmp(temp->next->name, name) < 0)
         temp = temp->next;
-        length++;
-    }
 
-    // Step 2: Connect tail to head (circular list)
-    temp->next = head;
+    newnode->next = temp->next;
+    if(temp->next != NULL)
+        temp->next->prev = newnode;
 
-    // Step 3: Effective rotation
-    k = k % length;
-    int stepsToNewTail = length - k - 1;
-
-    // Step 4: Move to new tail
-    struct ListNode* newTail = head;
-    for (int i = 0; i < stepsToNewTail; i++)
-        newTail = newTail->next;
-
-    // Step 5: New head is next of new tail
-    struct ListNode* newHead = newTail->next;
-
-    // Step 6: Break the circle
-    newTail->next = NULL;
-
-    return newHead;
+    temp->next = newnode;
+    newnode->prev = temp;
 }
 
-// Print list
-void printList(struct ListNode* head) {
-    while (head) {
-        printf("%d ", head->val);
-        head = head->next;
+void display() {
+    struct node *temp = head;
+    printf("\nCustomer List in Alphabetical Order:\n");
+    while(temp != NULL) {
+        printf("%s\t%s\n", temp->name, temp->email);
+        temp = temp->next;
     }
-    printf("\n");
 }
 
-// Driver code to test
 int main() {
+    int n;
+    char name[30], email[50];
 
-    // Example: 1->2->3->4->5
-    struct ListNode* head = newNode(1);
-    head->next = newNode(2);
-    head->next->next = newNode(3);
-    head->next->next->next = newNode(4);
-    head->next->next->next->next = newNode(5);
+    printf("Enter number of customers: ");
+    scanf("%d", &n);
 
-    int k = 2;
+    for(int i = 0; i < n; i++) {
+        printf("Enter Name and Email: ");
+        scanf("%s %s", name, email);
+        insertSorted(name, email);
+    }
 
-    printf("Original: ");
-    printList(head);
-
-    head = rotateRight(head, k);
-
-    printf("Rotated: ");
-    printList(head);
-
+    display();
     return 0;
 }
