@@ -1,56 +1,71 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct Node {
+struct Node
+{
     int data;
     struct Node *prev, *next;
 };
 
-struct Node* newNode(int data) {
-    struct Node* n = (struct Node*)malloc(sizeof(struct Node));
+struct Node *newNode(int data)
+{
+    struct Node *n = (struct Node *)malloc(sizeof(struct Node));
     n->data = data;
     n->prev = n->next = NULL;
     return n;
 }
 
-void append(struct Node** head, int data) {
-    struct Node* n = newNode(data);
-    if (*head == NULL) {
+void append(struct Node **head, int data)
+{
+    struct Node *n = newNode(data);
+
+    if (*head == NULL)
+    {
         *head = n;
         return;
     }
-    struct Node* temp = *head;
+
+    struct Node *temp = *head;
     while (temp->next)
         temp = temp->next;
+
     temp->next = n;
     n->prev = temp;
 }
 
-void removeDuplicates(struct Node* head) {
-    struct Node *cur = head, *runner;
+void removeDuplicates(struct Node *head)
+{
+    struct Node *cur, *temp;
 
-    while (cur != NULL) {
-        runner = cur->next;
-        while (runner != NULL) {
-            if (runner->data == cur->data) {
-                struct Node* del = runner;
-                runner = runner->next;
+    for (cur = head; cur != NULL; cur = cur->next)
+    {
+        temp = cur->next;
 
+        while (temp != NULL)
+        {
+            if (temp->data == cur->data)
+            {
+                struct Node *del = temp;
+                temp = temp->next;
+
+                del->prev->next = del->next;
                 if (del->next)
                     del->next->prev = del->prev;
-                del->prev->next = del->next;
 
                 free(del);
-            } else {
-                runner = runner->next;
+            }
+            else
+            {
+                temp = temp->next;
             }
         }
-        cur = cur->next;
     }
 }
 
-void printList(struct Node* head) {
-    while (head != NULL) {
+void printList(struct Node *head)
+{
+    while (head)
+    {
         printf("%d", head->data);
         if (head->next)
             printf(" <-> ");
@@ -59,9 +74,9 @@ void printList(struct Node* head) {
     printf("\n");
 }
 
-int main() {
-    struct Node* head = NULL;
-
+int main()
+{
+    struct Node *head = NULL;
     int arr[] = {8, 7, 5, 8, 7, 8, 1};
     int n = sizeof(arr) / sizeof(arr[0]);
 
