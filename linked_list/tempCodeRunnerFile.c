@@ -1,83 +1,80 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
-struct patient {
-    char name[30];
-    char disease[30];
-    int age;
-    struct patient *next;
+struct Node {
+    int data;
+    struct Node *prev, *next;
 };
 
-struct patient *start = NULL;
+struct Node* newNode(int data) {
+    struct Node* n = (struct Node*)malloc(sizeof(struct Node));
+    n->data = data;
+    n->prev = n->next = NULL;
+    return n;
+}
 
-void insertPatient(char name[], char disease[], int age) {
-    struct patient *newnode = (struct patient*)malloc(sizeof(struct patient));
-    strcpy(newnode->name, name);
-    strcpy(newnode->disease, disease);
-    newnode->age = age;
-    newnode->next = NULL;
+void append(struct Node** head, int data) {
+    struct Node* n = newNode(data);
+    if (*head == NULL) {
+        *head = n;
+        return;
+    }
+    struct Node* temp = *head;
+    while (temp->next)
+        temp = temp->next;
+    temp->next = n;
+    n->prev = temp;
+}
 
-    if(start == NULL) {
-        start = newnode;
-    } else {
-        struct patient *temp = start;
-        while(temp->next != NULL)
-            temp = temp->next;
-        temp->next = newnode;
+void removeDuplicates(struct Node* head) {
+    struct Node *cur = head, *runner;
+
+    while (cur != NULL) {
+        runner = cur->next;
+        while (runner != NULL) {
+            if (runner->data == cur->data) {
+                struct Node* del = runner;
+                runner = runner->next;
+
+                if (del->next)
+                    del->next->prev = del->prev;
+                del->prev->next = del->next;
+
+                free(del);
+            } else {
+                runner = runner->next;
+            }
+        }
+        cur = cur->next;
     }
 }
 
-void countDiseases() {
-    struct patient *temp1 = start;
-    struct patient *temp2;
-    int count;
-    int visited;
-
-    printf("\nDisease-wise Patient Count:\n");
-
-    while(temp1 != NULL) {
-        visited = 0;
-        temp2 = start;
-
-        // Check if disease already counted
-        while(temp2 != temp1) {
-            if(strcmp(temp2->disease, temp1->disease) == 0) {
-                visited = 1;
-                break;
-            }
-            temp2 = temp2->next;
-        }
-
-        if(!visited) {
-            count = 0;
-            temp2 = temp1;
-            while(temp2 != NULL) {
-                if(strcmp(temp2->disease, temp1->disease) == 0)
-                    count++;
-                temp2 = temp2->next;
-            }
-            printf("%s : %d\n", temp1->disease, count);
-        }
-
-        temp1 = temp1->next;
+void printList(struct Node* head) {
+    while (head != NULL) {
+        printf("%d", head->data);
+        if (head->next)
+            printf(" <-> ");
+        head = head->next;
     }
+    printf("\n");
 }
 
 int main() {
-    int n, age;
-    char name[30], disease[30];
+    struct Node* head = NULL;
 
-    printf("Enter number of patients: ");
-    scanf("%d", &n);
+    int arr[] = {8, 7, 5, 8, 7, 8, 1};
+    int n = sizeof(arr) / sizeof(arr[0]);
 
-    printf("Enter patient details (Name Disease Age):\n");
-    for(int i = 0; i < n; i++) {
-        scanf("%s %s %d", name, disease, &age);
-        insertPatient(name, disease, age);
-    }
+    for (int i = 0; i < n; i++)
+        append(&head, arr[i]);
 
-    countDiseases();
+    printf("Original: ");
+    printList(head);
+
+    removeDuplicates(head);
+
+    printf("After removing duplicates: ");
+    printList(head);
 
     return 0;
 }
