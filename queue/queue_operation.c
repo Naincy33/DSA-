@@ -46,6 +46,13 @@ int dequeue(struct queue *q){
     }
     return a;
 }
+
+void display(struct queue *q){
+    for(int i = q->f+1; i <= q->r; i++){
+        printf("Element %d: %d\n", i - q->f, q->arr[i]);
+    }
+}
+
  
 int main(){
     struct queue q;
@@ -59,10 +66,11 @@ int main(){
     enqueue(&q, 1); 
     printf("Dequeuing element %d\n", dequeue(&q));
     printf("Dequeuing element %d\n", dequeue(&q));
-    printf("Dequeuing element %d\n", dequeue(&q)); 
+    //printf("Dequeuing element %d\n", dequeue(&q)); 
     enqueue(&q, 45);
     enqueue(&q, 45);
     enqueue(&q, 45);
+    display(&q);
  
     if(isEmpty(&q)){
         printf("Queue is empty\n");
