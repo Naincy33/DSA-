@@ -1,59 +1,112 @@
 #include <stdio.h>
-#define MAX 50
+#include <stdlib.h>
+#include <ctype.h>
 
-struct Stack {
-    int arr[MAX];
-    int top;
+struct node
+{
+    char data;
+    struct node *left, *right;
 };
 
-void init(struct Stack *s) {
-    s->top = -1;
+struct node *stack[20];
+int top = -1;
+
+struct node *newNode(char x)
+{
+    struct node *n = (struct node *)malloc(sizeof(struct node));
+    n->data = x;
+    n->left = n->right = NULL;
+    return n;
 }
 
-void push(struct Stack *s, int x) {
-    s->arr[++s->top] = x;
+void push(struct node *n)
+{
+    stack[++top] = n;
 }
 
-int pop(struct Stack *s) {
-    return s->arr[s->top--];
+struct node *pop()
+{
+    return stack[top--];
 }
 
-int isEmpty(struct Stack *s) {
-    return s->top == -1;
-}
+struct node *buildTree(char postfix[])
+{
+    int i = 0;
+    while (postfix[i])
+    {
+        char ch = postfix[i];
 
-int isEqual(struct Stack *s1, struct Stack *s2) {
+        // 👉 SPACE SKIP KARO
+        if (ch == ' ')
+        {
+            i++;
+            continue;
+        }
 
-    // size check
-    if (s1->top != s2->top)
-        return 0;
-
-    // element-wise comparison
-    while (!isEmpty(s1)) {
-        if (pop(s1) != pop(s2))
-            return 0;
+        if (isalnum(ch))
+        {
+            push(newNode(ch));
+        }
+        else
+        {
+            struct node *n = newNode(ch);
+            n->right = pop();
+            n->left = pop();
+            push(n);
+        }
+        i++;
     }
-    return 1;
+    return pop();
 }
 
-int main() {
-    struct Stack s1, s2;
-    init(&s1);
-    init(&s2);
+void preorder(struct node *root)
+{
+    if (root)
+    {
+        printf("%c ", root->data);
+        preorder(root->left);
+        preorder(root->right);
+    }
+}
 
-    // Example 1
-    push(&s1, 10);
-    push(&s1, 4);
-    push(&s1, 2);
+void inorder(struct node *root)
+{
+    if (root)
+    {
+        inorder(root->left);
+        printf("%c ", root->data);
+        inorder(root->right);
+    }
+}
 
-    push(&s2, 10);
-    push(&s2, 4);
-    push(&s2, 2);
+void postorder(struct node *root)
+{
+    if (root)
+    {
+        postorder(root->left);
+        postorder(root->right);
+        printf("%c ", root->data);
+    }
+}
 
-    if (isEqual(&s1, &s2))
-        printf("EQUAL\n");
-    else
-        printf("NOT EQUAL\n");
+int main()
+{
+    // char postfix[] = "ab+c*";
+
+    char postfix[] = "6 3 2 - 5 * + 2 S 3 +";
+
+    struct node *root = buildTree(postfix);
+
+    printf("Prefix : ");
+    preorder(root);
+    printf("\n");
+
+    printf("Infix  : ");
+    inorder(root);
+    printf("\n");
+
+    printf("Postfix: ");
+    postorder(root);
 
     return 0;
 }

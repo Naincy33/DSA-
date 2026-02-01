@@ -44,7 +44,7 @@ int main() {
     // Example 1
     push(&s1, 10);
     push(&s1, 4);
-    push(&s1, 2);
+    // push(&s1, 2);
 
     push(&s2, 10);
     push(&s2, 4);
